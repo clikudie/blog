@@ -1,3 +1,11 @@
+---
+toc: true
+layout: post
+description: Callbacks, what they are and when to use them.
+categories: [markdown]
+title: Callbacks Explained
+---
+
 # Callbacks explained
 
 Most of the time, the code we write is synchronous. we usually expect one thing to happen after the other. This makes it easier to logically step through and understand how our code is executed. In practice however, there are many scenarios where we simply want our code to execute in an asynchronous manner because we cannot keep users waiting while performing an intensive IO operation for example.
