@@ -1,0 +1,66 @@
+<h1 id="callbacks-explained">Callbacks explained</h1>
+
+<p>Most of the time, the code we write is synchronous. we usually expect one thing to happen after the other. This makes it easier to logically step through and understand how our code is executed. In practice however, there are many scenarios where we simply want our code to execute in an asynchronous manner because we cannot keep users waiting while performing an intensive IO operation for example.</p>
+
+<p>In situations like making API calls or accessing a database, it’ll be in our best interest to make asynchronous calls with callbacks. So what exactly is a callback function?</p>
+
+<blockquote>
+  <p>Important: A callback function is a function that is passed as an argument to another function. That makes the the function that a callback is passed to a higher-order function.</p>
+</blockquote>
+
+<p>Callback functions are particularly common in JavaScript because functions are considered as first class objects. As such, actions that can performed on objects such as passing them as arguments or assigning them to variables can be done to functions. Let’s take a look a simple callback function in a synchronous code.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">close</span><span class="p">(</span><span class="nx">byeStatement</span><span class="p">,</span> <span class="nx">byeStatementCb</span><span class="p">,</span> <span class="nx">exitCodeCb</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">byeStatementCb</span><span class="p">(</span><span class="nx">byeStatement</span><span class="p">);</span>
+  <span class="nx">exitCodeCb</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">exitCode</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Code exited!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">logByeStatement</span><span class="p">(</span><span class="nx">statement</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">statement</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">close</span><span class="p">(</span><span class="dl">"</span><span class="s2">Goodnight buddy!</span><span class="dl">"</span><span class="p">,</span> <span class="nx">logByeStatement</span><span class="p">,</span> <span class="nx">exitCode</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>We can also pass an anonymous function to close() as our callback.</p>
+
+<blockquote>
+  <p>Important: Anonymous functions are not bound by an identifier and they are mostly passed to higher order functions. We can rewrite the above code as:</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">close</span><span class="p">(</span><span class="dl">"</span><span class="s2">Goodnight buddy!</span><span class="dl">"</span><span class="p">,</span> <span class="nx">logByeStatement</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Code exited!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>or using arrow functions:</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">close</span><span class="p">(</span><span class="dl">"</span><span class="s2">Goodnight buddy!</span><span class="dl">"</span><span class="p">,</span> <span class="nx">logByeStatement</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Code exited!</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>In the sample code, on closing a program, we pass two function exitCode() and logByeStatement() to the close function to be executed. The two functions are our callback functions. Notice how we pass them in close() without the parentheses. This ensures that our functions are not fired immediately. Also, the logByeStatement function takes in a parameter but we do not pass that in until we call the function in close. The above example does not fully show why we need callbacks as this code can simply be written and executed synchronously.</p>
+
+<p>Callbacks come in handy when we need to execute some block of code asynchronously. In the example below, we’ll fake a call to server that has a ten-second latency. In such situation, you do not want your UI and users to be stuck for such a long time while waiting for a response from the server. In this scenario, we’ll pass a callback function which is fired when we eventually have some results from the server while we continue to execute the rest of our code normally.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getBillionRecords</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">record</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">we got billions</span><span class="dl">"</span><span class="p">;</span>
+    <span class="nx">cb</span><span class="p">(</span><span class="nx">record</span><span class="p">);</span>
+  <span class="p">},</span> <span class="mi">10000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">printBillionRecords</span><span class="p">(</span><span class="nx">records</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">records</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">getBillionRecords</span><span class="p">(</span><span class="nx">printBillionRecords</span><span class="p">);</span>
+<span class="c1">// some more code to execute</span>
+</code></pre></div></div>
+
+<p>In the same example, we are faking getting a billion records, albeit just a string which has a latency of 10 seconds. After we fetch all the records, we log the results to the console. Since we can’t afford to to just sit and wait for ten seconds before processing the results, we pass a function that will process the results when we get them while we continue the execution of the rest of the code. This is where callbacks are the most useful.</p>
