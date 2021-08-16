@@ -5,7 +5,7 @@ categories: [markdown]
 title: Callbacks Explained
 ---
 
-## Callbacks explained
+## Callbacks | Not So Deep Dive
 
 Most of the time, the code we write is synchronous. Synchronous code is easy to logically step through and understand. In practice however, there are many scenarios where we'd want our code to execute in an asynchronous manner, for instance making API calls and accessing databases.
 
