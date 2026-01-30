@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-foreground: 0 0% 15%;
+  --color-background: 0 0% 100%;
+  --color-secondary-foreground: 0 0% 50%;
+}
+
+.dark {
+  --color-foreground: 0 0% 90%;
+  --color-background: 0 0% 10%;
+  --color-secondary-foreground: 0 0% 60%;
+}
